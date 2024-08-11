@@ -10,6 +10,9 @@ import java.io.IOException;
 
 public class Player extends Entity{
 
+    public final int screenX;
+    public final int screenY;
+
     GamePanel panel;
     KeyHandler keyHandler;
 
@@ -17,13 +20,16 @@ public class Player extends Entity{
         this.keyHandler = keyHandler;
         this.panel = panel;
 
+        screenX = panel.screenWidth/2 - (panel.tileSize /2);
+        screenY = panel.screenHeight/2 - (panel.tileSize /2);
+
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues(){
-        x = 100;
-        y = 100;
+        worldX = panel.tileSize * 23;
+        worldY = panel.tileSize * 21;
 
         speed = 4;
         direction = "down";
@@ -48,16 +54,16 @@ public class Player extends Entity{
     public void update(){
         if(keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed){
             if(keyHandler.upPressed){
-                y -= speed;
+                worldY -= speed;
                 direction = "up";
             } else if(keyHandler.downPressed){
-                y += speed;
+                worldY += speed;
                 direction = "down";
             } else if(keyHandler.leftPressed){
-                x -= speed;
+                worldX -= speed;
                 direction = "left";
             } else if(keyHandler.rightPressed){
-                x += speed;
+                worldX += speed;
                 direction = "right";
             }
 
@@ -112,7 +118,7 @@ public class Player extends Entity{
                 break;
         }
 
-        g2.drawImage(image, x, y, panel.tileSize, panel.tileSize, null);
+        g2.drawImage(image, screenX, screenY, panel.tileSize, panel.tileSize, null);
 
     }
 }
