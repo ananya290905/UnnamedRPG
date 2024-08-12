@@ -2,11 +2,16 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
+import object.ObjectDoorL;
+import object.ObjectDoorR;
+import object.SuperObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.*;
+import java.util.List;
 
 public class Player extends Entity{
 
@@ -16,6 +21,7 @@ public class Player extends Entity{
     GamePanel panel;
     KeyHandler keyHandler;
 
+    List<SuperObject> openedDoors;
     public Player(GamePanel panel, KeyHandler keyHandler){
         this.keyHandler = keyHandler;
         this.panel = panel;
@@ -23,15 +29,19 @@ public class Player extends Entity{
         screenX = panel.screenWidth/2 - (panel.tileSize /2);
         screenY = panel.screenHeight/2 - (panel.tileSize /2);
 
+        solidArea = new Rectangle(1, 1, 40, 40);
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         setDefaultValues();
         getPlayerImage();
+        openedDoors = new ArrayList<>();
     }
 
     public void setDefaultValues(){
-        worldX = panel.tileSize * 23;
-        worldY = panel.tileSize * 21;
+        worldX = panel.tileSize * 20;
+        worldY = panel.tileSize * 20;
 
-        speed = 4;
+        speed = 10;
         direction = "down";
     }
 
@@ -54,17 +64,43 @@ public class Player extends Entity{
     public void update(){
         if(keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed){
             if(keyHandler.upPressed){
-                worldY -= speed;
                 direction = "up";
             } else if(keyHandler.downPressed){
-                worldY += speed;
                 direction = "down";
             } else if(keyHandler.leftPressed){
-                worldX -= speed;
                 direction = "left";
             } else if(keyHandler.rightPressed){
-                worldX += speed;
                 direction = "right";
+            }
+
+            collisionOn = false;
+            panel.collisionChecker.checkTile(this);
+
+            int objIndex = panel.collisionChecker.checkObject(this, true);
+
+            if (objIndex == 999) {
+                for (SuperObject door : openedDoors) {
+                    door.visible = true;
+                }
+                openedDoors.clear(); // Clear the list after resetting doors
+            }
+
+            pickUpObject(objIndex);
+            if(!collisionOn){
+                switch (direction){
+                    case "up":
+                        worldY -= speed;
+                        break;
+                    case "down":
+                        worldY += speed;
+                        break;
+                    case "left":
+                        worldX -= speed;
+                        break;
+                    case "right":
+                        worldX += speed;
+                        break;
+                }
             }
 
             spriteCounter ++;
@@ -79,6 +115,17 @@ public class Player extends Entity{
         }
 
     }
+
+    public void pickUpObject(int i){
+        if(i != 999){
+            SuperObject so = panel.object[i];
+            if(so.getClass() == ObjectDoorL.class || so.getClass() == ObjectDoorR.class){
+                so.visible = false;
+                openedDoors.add(so);
+            }
+        }
+    }
+
 
     public void draw(Graphics2D g2){
         BufferedImage image = null;
