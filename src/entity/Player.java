@@ -2,11 +2,16 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
+import object.ObjectDoorL;
+import object.ObjectDoorR;
+import object.SuperObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.*;
+import java.util.List;
 
 public class Player extends Entity{
 
@@ -16,6 +21,7 @@ public class Player extends Entity{
     GamePanel panel;
     KeyHandler keyHandler;
 
+    List<SuperObject> openedDoors;
     public Player(GamePanel panel, KeyHandler keyHandler){
         this.keyHandler = keyHandler;
         this.panel = panel;
@@ -23,18 +29,19 @@ public class Player extends Entity{
         screenX = panel.screenWidth/2 - (panel.tileSize /2);
         screenY = panel.screenHeight/2 - (panel.tileSize /2);
 
-        solidArea = new Rectangle(1, 1, 46, 46);
+        solidArea = new Rectangle(1, 1, 40, 40);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         setDefaultValues();
         getPlayerImage();
+        openedDoors = new ArrayList<>();
     }
 
     public void setDefaultValues(){
         worldX = panel.tileSize * 20;
         worldY = panel.tileSize * 20;
 
-        speed = 4;
+        speed = 10;
         direction = "down";
     }
 
@@ -71,6 +78,14 @@ public class Player extends Entity{
 
             int objIndex = panel.collisionChecker.checkObject(this, true);
 
+            if (objIndex == 999) {
+                for (SuperObject door : openedDoors) {
+                    door.visible = true;
+                }
+                openedDoors.clear(); // Clear the list after resetting doors
+            }
+
+            pickUpObject(objIndex);
             if(!collisionOn){
                 switch (direction){
                     case "up":
@@ -99,6 +114,16 @@ public class Player extends Entity{
             }
         }
 
+    }
+
+    public void pickUpObject(int i){
+        if(i != 999){
+            SuperObject so = panel.object[i];
+            if(so.getClass() == ObjectDoorL.class || so.getClass() == ObjectDoorR.class){
+                so.visible = false;
+                openedDoors.add(so);
+            }
+        }
     }
 
 

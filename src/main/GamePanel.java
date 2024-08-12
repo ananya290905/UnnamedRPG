@@ -92,7 +92,7 @@ public class GamePanel extends JPanel implements Runnable{
         tileManager.draw(g2);
 
         for(SuperObject o : object){
-            if(o != null){
+            if(o != null && o.visible == true){
                 o.draw(g2, this);
             }
         }

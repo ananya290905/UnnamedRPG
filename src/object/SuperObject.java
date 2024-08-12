@@ -18,6 +18,8 @@ public class SuperObject {
     public int solidAreaDefaultX = 0;
     public int solidAreaDefaultY = 0;
 
+    public boolean visible = true;
+
     public void draw(Graphics2D g2, GamePanel panel){
         int screenX = worldX - panel.player.worldX + panel.player.screenX;
         int screenY = worldY - panel.player.worldY + panel.player.screenY;
