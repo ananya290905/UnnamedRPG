@@ -23,13 +23,16 @@ public class Player extends Entity{
         screenX = panel.screenWidth/2 - (panel.tileSize /2);
         screenY = panel.screenHeight/2 - (panel.tileSize /2);
 
+        solidArea = new Rectangle(1, 1, 46, 46);
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues(){
-        worldX = panel.tileSize * 23;
-        worldY = panel.tileSize * 21;
+        worldX = panel.tileSize * 20;
+        worldY = panel.tileSize * 20;
 
         speed = 4;
         direction = "down";
@@ -54,17 +57,35 @@ public class Player extends Entity{
     public void update(){
         if(keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed){
             if(keyHandler.upPressed){
-                worldY -= speed;
                 direction = "up";
             } else if(keyHandler.downPressed){
-                worldY += speed;
                 direction = "down";
             } else if(keyHandler.leftPressed){
-                worldX -= speed;
                 direction = "left";
             } else if(keyHandler.rightPressed){
-                worldX += speed;
                 direction = "right";
+            }
+
+            collisionOn = false;
+            panel.collisionChecker.checkTile(this);
+
+            int objIndex = panel.collisionChecker.checkObject(this, true);
+
+            if(!collisionOn){
+                switch (direction){
+                    case "up":
+                        worldY -= speed;
+                        break;
+                    case "down":
+                        worldY += speed;
+                        break;
+                    case "left":
+                        worldX -= speed;
+                        break;
+                    case "right":
+                        worldX += speed;
+                        break;
+                }
             }
 
             spriteCounter ++;
@@ -79,6 +100,7 @@ public class Player extends Entity{
         }
 
     }
+
 
     public void draw(Graphics2D g2){
         BufferedImage image = null;
