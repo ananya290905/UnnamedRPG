@@ -41,7 +41,7 @@ public class Player extends Entity{
         worldX = panel.tileSize * 20;
         worldY = panel.tileSize * 20;
 
-        speed = 10;
+        speed = 5;
         direction = "down";
     }
 
@@ -81,8 +81,9 @@ public class Player extends Entity{
             if (objIndex == 999) {
                 for (SuperObject door : openedDoors) {
                     door.visible = true;
+                    door.interacted = false;
                 }
-                openedDoors.clear(); // Clear the list after resetting doors
+                openedDoors.clear();
             }
 
             pickUpObject(objIndex);
@@ -120,6 +121,10 @@ public class Player extends Entity{
         if(i != 999){
             SuperObject so = panel.object[i];
             if(so.getClass() == ObjectDoorL.class || so.getClass() == ObjectDoorR.class){
+                if(!so.interacted){
+                    panel.playSE(0);
+                    so.interacted = true;
+                }
                 so.visible = false;
                 openedDoors.add(so);
             }
