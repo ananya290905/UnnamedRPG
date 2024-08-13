@@ -127,6 +127,7 @@ public class Player extends Entity{
                 }
                 so.visible = false;
                 openedDoors.add(so);
+                panel.ui.showMessage("Opened Door");
             }
         }
     }

@@ -30,6 +30,8 @@ public class GamePanel extends JPanel implements Runnable{
 
     Sound sound = new Sound();
 
+    public UI ui = new UI(this);
+
     TileManager tileManager = new TileManager(this);
 
     public SuperObject[] object = new SuperObject[10];
@@ -98,6 +100,8 @@ public class GamePanel extends JPanel implements Runnable{
         }
 
         player.draw(g2);
+
+        ui.draw(g2);
 
         g2.dispose();
     }
