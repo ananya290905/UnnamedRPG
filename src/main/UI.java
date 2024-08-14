@@ -10,6 +10,7 @@ public class UI {
     public boolean messageOn = false;
 
     int messageCounter = 0;
+    Graphics2D g2;
 
     public String message = "";
     public UI(GamePanel panel){
@@ -18,24 +19,47 @@ public class UI {
     }
 
     public void draw(Graphics2D g2){
+//        g2.setFont(baloo_40);
+//        g2.setColor(Color.white);
+//
+//        g2.drawString("ITEMS", 25, 50);
+//
+//        if(messageOn){
+//            g2.drawString(message, panel.tileSize/2, panel.tileSize*5);
+//            messageCounter++;
+//        }
+//        if(messageCounter > 120){
+//            messageCounter = 0;
+//            messageOn = false;
+//        }
+        this.g2 = g2;
         g2.setFont(baloo_40);
-        g2.setColor(Color.white);
+        if(panel.gameState == panel.playState){
 
-        g2.drawString("ITEMS", 25, 50);
-
-        if(messageOn){
-            g2.drawString(message, panel.tileSize/2, panel.tileSize*5);
-            messageCounter++;
         }
-        if(messageCounter > 120){
-            messageCounter = 0;
-            messageOn = false;
+        if(panel.gameState == panel.pauseState){
+            drawPauseState();
         }
     }
 
     public void showMessage(String text){
         message = text;
         messageOn = true;
+    }
+
+    public void drawPauseState(){
+        String text = "PAUSED";
+        int x = getXForText(text);
+        int y = panel.screenHeight / 2;
+        g2.setColor(Color.white);
+
+        g2.drawString(text, x, y);
+    }
+
+    private int getXForText(String text) {
+        int len = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        int x = panel.screenWidth/2 - len/2;
+        return x;
     }
 
 }
