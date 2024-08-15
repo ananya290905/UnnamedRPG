@@ -1,5 +1,7 @@
 package main;
 
+import entity.Entity;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -59,7 +61,35 @@ public class UI {
         int width = panel.screenWidth - panel.tileSize * 4;
         int height = panel.tileSize * 4;
         drawSubWindow(x, y, width, height);
+
+        Entity e = panel.npc[panel.npcIndex];
+
+        if(panel.npc[panel.npcIndex].showOptions){
+            drawOptions(x, 150 + y + panel.tileSize * 4, panel.screenWidth - panel.tileSize * 4, (panel.tileSize * 4)/2, e.response[0]);
+            drawOptions(x, 150 + y + (panel.tileSize * 4) + (panel.tileSize * 4)/2, panel.screenWidth - panel.tileSize * 4, (panel.tileSize * 4)/2, e.response[1]);
+        }
+
     }
+
+    public void drawOptions(int x, int y, int width, int height, String option){
+        g2.setColor(new Color(0, 0, 0, 200));
+        g2.fillRoundRect(x, y, width, height, 35, 35);
+        g2.setColor(Color.white);
+
+        g2.setStroke(new BasicStroke(5));
+        g2.drawRoundRect(x+5, y+5, width - 10, height - 10, 25, 25);
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
+
+        x += panel.tileSize;
+        y += panel.tileSize;
+
+        for(String line : option.split("\n")){
+            g2.drawString(line, x, y);
+            y += 30;
+        }
+    }
+
 
     public void drawSubWindow(int x, int y, int width, int height){
         g2.setColor(new Color(0, 0, 0, 200));
@@ -83,8 +113,6 @@ public class UI {
         message = text;
         messageOn = true;
     }
-
-
     public void drawPauseState(){
 
         String text = "PAUSED";

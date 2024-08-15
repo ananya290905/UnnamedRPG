@@ -61,18 +61,66 @@ public class NPC_MrG extends Entity{
     }
 
     public void setDialogue(){
-        dialogues[0] = "Psst! Hey folk! Are you new?\n" +
-                "I haven't see any new people\naround " +
-                "here for a while.";
-        dialogues[1] = "Hahaha!";
+        dialogues[0] = "Psst! Hey folk! What are you \ndoing? You are not supposed to be\nhere!";
+        dialogues[1] = "Listen, do you think you can help\nme? If I decorate my class\n maybe my students will return!";
+        dialogues[2] = "All my supplies and furniture\nwas thrown in the central river.";
+        dialogues[3] = "I reckon if you get a fishing\nrod, you will be sure to find\nsomething of mine.";
+        dialogues[4] = "If you go south-east of this town,\nfollowing the pathway you will\nfind a barkery";
+
+
+        if(dialogueIndex == 0){
+            showOptions = true;
+            response[0] = "1 : Who are you?";
+            response[1] = "2 : Why?";
+            replyIndex = 0;
+        } else if(dialogueIndex == 1){
+            showOptions = true;
+            response[0] = "1 : That will not work.";
+            response[1] = "2 : What do I have to do?";
+            replyIndex = 1;
+        } else if(dialogueIndex == 4){
+            showOptions = true;
+            response[0] = "1 : What is a barkery?";
+            response[1] = "2 : Why would they have a fishing\n    rod?";
+            replyIndex = 2;
+        }
 
     }
 
     public void speak(){
-        if(dialogues[dialogueIndex] == null){
+        if(dialogueIndex >= dialogues.length || dialogues[dialogueIndex] == null){
             dialogueIndex = 0;
         }
         panel.ui.currentDialogue = dialogues[dialogueIndex];
+        if (dialogueIndex == 0 || dialogueIndex == 1 || dialogueIndex == 4) {
+            setDialogue();
+        }
         dialogueIndex++;
     }
+
+    public void respondToPlayer(int selected){
+        switch (replyIndex){
+            case 0 :
+                setReply(selected, "I am Mr.G, the local school\nteacher. My students have\ndisappeared under weird\ncircumstances...",
+                        "This is my old classroom.\nThe children.. they are gone now..\n I like to come here to sulk.");
+                break;
+            case 1 :
+                setReply(selected, "Trying being more positive, folk!\nHelp a poor old mather out.", "Great to have you on board!");
+                break;
+            case 2 :
+                setReply(selected, "It is a bar and bakery silly!", "Kate is the co-owner and the\ngadget person of this town\nShe always has something useful\nfor all of us. [PRESS ENTER TO EXIT]");
+                break;
+        }
+        showOptions = false;
+    }
+
+    private void setReply(int selected, String a, String b) {
+        if(selected == 1){
+            panel.ui.currentDialogue = a;
+        } else if (selected == 2){
+            panel.ui.currentDialogue = b;
+        }
+    }
+
+
 }

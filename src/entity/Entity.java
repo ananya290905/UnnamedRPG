@@ -22,6 +22,9 @@ public class Entity  {
 
     int dialogueIndex = 0;
     String[] dialogues = new String[20];
+    public String[] response = new String[2];
+
+    public boolean showOptions;
 
     public Entity(GamePanel panel){
         this.panel = panel;
@@ -31,6 +34,9 @@ public class Entity  {
 
     }
     public void speak(){}
+    public void respondToPlayer(int i){}
+
+    public int replyIndex = 0;
 
     public void update(){
         setAction();

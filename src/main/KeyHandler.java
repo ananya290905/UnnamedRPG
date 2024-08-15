@@ -59,6 +59,15 @@ public class KeyHandler implements KeyListener {
 
             }
 
+            if(code == KeyEvent.VK_1){
+                panel.npc[panel.npcIndex].respondToPlayer(1);
+            }
+            if(code == KeyEvent.VK_2){
+                panel.npc[panel.npcIndex].respondToPlayer(2);
+            }
+
+
+
         }
 
     }
