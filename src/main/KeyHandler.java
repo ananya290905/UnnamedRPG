@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed;
     GamePanel panel;
 
     public KeyHandler(GamePanel panel){
@@ -21,26 +21,46 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
-        if(code == KeyEvent.VK_W){
-            upPressed = true;
+        if(panel.gameState == panel.playState){
+            if(code == KeyEvent.VK_W){
+                upPressed = true;
+            }
+
+            if(code == KeyEvent.VK_A){
+                leftPressed = true;
+            }
+            if(code == KeyEvent.VK_S){
+                downPressed = true;
+            }
+            if(code == KeyEvent.VK_D){
+                rightPressed = true;
+            }
+            if(code == KeyEvent.VK_ESCAPE){
+                panel.gameState = panel.pauseState;
+            }
+            
+
         }
 
-        if(code == KeyEvent.VK_A){
-            leftPressed = true;
-        }
-        if(code == KeyEvent.VK_S){
-            downPressed = true;
-        }
-        if(code == KeyEvent.VK_D){
-            rightPressed = true;
-        }
-        if(code == KeyEvent.VK_ESCAPE){
-            if(panel.gameState == panel.playState){
-                panel.gameState = panel.pauseState;
-            } else if(panel.gameState == panel.pauseState){
+        if(panel.gameState == panel.pauseState){
+            if(code == KeyEvent.VK_ESCAPE){
                 panel.gameState = panel.playState;
             }
         }
+
+
+        if(panel.gameState == panel.dialogState){
+            if(code == KeyEvent.VK_ENTER){
+                panel.gameState = panel.playState;
+            }
+
+            if(code == KeyEvent.VK_SPACE){
+                panel.npc[panel.npcIndex].speak();
+
+            }
+
+        }
+
     }
 
     @Override

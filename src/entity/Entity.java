@@ -20,6 +20,9 @@ public class Entity  {
     public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
 
+    int dialogueIndex = 0;
+    String[] dialogues = new String[20];
+
     public Entity(GamePanel panel){
         this.panel = panel;
     }
@@ -27,6 +30,7 @@ public class Entity  {
     public void setAction(){
 
     }
+    public void speak(){}
 
     public void update(){
         setAction();

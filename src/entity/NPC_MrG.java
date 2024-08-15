@@ -15,6 +15,7 @@ public class NPC_MrG extends Entity{
         direction = "down";
         speed = 2;
         getImage();
+        setDialogue();
     }
 
     public void getImage(){
@@ -37,7 +38,7 @@ public class NPC_MrG extends Entity{
 
         actionCounter++;
 
-        if(actionCounter == 120){
+        if(actionCounter == 60){
             Random random = new Random();
             int i = random.nextInt(100) + 1;
 
@@ -57,5 +58,21 @@ public class NPC_MrG extends Entity{
             actionCounter = 0;
         }
 
+    }
+
+    public void setDialogue(){
+        dialogues[0] = "Psst! Hey folk! Are you new?\n" +
+                "I haven't see any new people\naround " +
+                "here for a while.";
+        dialogues[1] = "Hahaha!";
+
+    }
+
+    public void speak(){
+        if(dialogues[dialogueIndex] == null){
+            dialogueIndex = 0;
+        }
+        panel.ui.currentDialogue = dialogues[dialogueIndex];
+        dialogueIndex++;
     }
 }

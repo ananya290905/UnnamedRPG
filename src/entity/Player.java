@@ -120,6 +120,12 @@ public class Player extends Entity{
 
     public void interactNPC(int index){
         if(index != 999){
+                panel.gameState = panel.dialogState;
+                panel.npc[index].speak();
+                panel.npcIndex = index;
+
+        } else{
+            panel.gameState = panel.playState;
         }
     }
 

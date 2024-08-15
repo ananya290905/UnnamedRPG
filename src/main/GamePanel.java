@@ -8,6 +8,7 @@ import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -22,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
 
-    KeyHandler keyHandler = new KeyHandler(this);
+    public KeyHandler keyHandler = new KeyHandler(this);
     Thread gameThread;
     public Player player = new Player(this, keyHandler);
 
@@ -41,12 +42,14 @@ public class GamePanel extends JPanel implements Runnable{
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
+    public final int dialogState = 3;
 
     //NPC
     public Entity[] npc = new Entity[10];
+    public int npcIndex = 0;
 
 
-    public GamePanel(){
+    public GamePanel() throws IOException, FontFormatException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);

@@ -2,20 +2,28 @@ package main;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
 
 public class UI {
 
     GamePanel panel;
-    Font baloo_40;
     public boolean messageOn = false;
 
     int messageCounter = 0;
     Graphics2D g2;
+    Font baloo;
+
+
+    public String currentDialogue;
 
     public String message = "";
-    public UI(GamePanel panel){
+    public UI(GamePanel panel) throws IOException, FontFormatException {
         this.panel = panel;
-        baloo_40 = new Font("Baloo Bhaijaan", Font.BOLD, 40);
+
+        InputStream is = getClass().getResourceAsStream("/resources/font/Baloo-Regular.ttf");
+        baloo = Font.createFont(Font.TRUETYPE_FONT, is);
     }
 
     public void draw(Graphics2D g2){
@@ -33,12 +41,41 @@ public class UI {
 //            messageOn = false;
 //        }
         this.g2 = g2;
-        g2.setFont(baloo_40);
+        g2.setFont(baloo);
         if(panel.gameState == panel.playState){
 
         }
         if(panel.gameState == panel.pauseState){
             drawPauseState();
+        }
+        if(panel.gameState == panel.dialogState){
+            drawDialogueScreen();
+        }
+    }
+
+    public void drawDialogueScreen(){
+        int x = panel.tileSize * 2;
+        int y = panel.tileSize / 2;
+        int width = panel.screenWidth - panel.tileSize * 4;
+        int height = panel.tileSize * 4;
+        drawSubWindow(x, y, width, height);
+    }
+
+    public void drawSubWindow(int x, int y, int width, int height){
+        g2.setColor(new Color(0, 0, 0, 200));
+        g2.fillRoundRect(x, y, width, height, 35, 35);
+        g2.setColor(Color.white);
+
+        g2.setStroke(new BasicStroke(5));
+        g2.drawRoundRect(x+5, y+5, width - 10, height - 10, 25, 25);
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
+        x += panel.tileSize;
+        y += panel.tileSize;
+
+        for(String line : currentDialogue.split("\n")){
+            g2.drawString(line, x, y);
+            y += 40;
         }
     }
 
@@ -47,7 +84,9 @@ public class UI {
         messageOn = true;
     }
 
+
     public void drawPauseState(){
+
         String text = "PAUSED";
         int x = getXForText(text);
         int y = panel.screenHeight / 2;
