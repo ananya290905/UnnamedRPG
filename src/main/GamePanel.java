@@ -1,5 +1,6 @@
 package main;
 
+import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import tile.Tile;
@@ -7,6 +8,7 @@ import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -21,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
 
-    KeyHandler keyHandler = new KeyHandler();
+    public KeyHandler keyHandler = new KeyHandler(this);
     Thread gameThread;
     public Player player = new Player(this, keyHandler);
 
@@ -30,12 +32,24 @@ public class GamePanel extends JPanel implements Runnable{
 
     Sound sound = new Sound();
 
+    public UI ui = new UI(this);
+
     TileManager tileManager = new TileManager(this);
 
     public SuperObject[] object = new SuperObject[10];
 
+    //GAME STATE
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
+    public final int dialogState = 3;
 
-    public GamePanel(){
+    //NPC
+    public Entity[] npc = new Entity[10];
+    public int npcIndex = 0;
+
+
+    public GamePanel() throws IOException, FontFormatException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
@@ -45,7 +59,10 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void setUpGame(){
+
         assetSetter.setObject();
+        assetSetter.setNPC();
+        gameState = playState;
     }
 
     public void startGameThread(){
@@ -81,7 +98,18 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update(){
-        player.update();
+        if(gameState == playState){
+            player.update();
+            for(Entity e : npc){
+                if(e != null){
+                    e.update();
+                }
+            }
+        }
+
+        if(gameState == pauseState){
+
+        }
     }
 
     public void paintComponent(Graphics g){
@@ -96,8 +124,15 @@ public class GamePanel extends JPanel implements Runnable{
                 o.draw(g2, this);
             }
         }
+        for(Entity e : npc){
+            if(e != null){
+                e.draw(g2);
+            }
+        }
 
         player.draw(g2);
+
+        ui.draw(g2);
 
         g2.dispose();
     }

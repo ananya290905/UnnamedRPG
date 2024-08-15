@@ -18,14 +18,12 @@ public class Player extends Entity{
     public final int screenX;
     public final int screenY;
 
-    GamePanel panel;
     KeyHandler keyHandler;
 
     List<SuperObject> openedDoors;
     public Player(GamePanel panel, KeyHandler keyHandler){
+        super(panel);
         this.keyHandler = keyHandler;
-        this.panel = panel;
-
         screenX = panel.screenWidth/2 - (panel.tileSize /2);
         screenY = panel.screenHeight/2 - (panel.tileSize /2);
 
@@ -87,6 +85,9 @@ public class Player extends Entity{
             }
 
             pickUpObject(objIndex);
+
+            int npcIndex = panel.collisionChecker.checkEntity(this, panel.npc);
+            interactNPC(npcIndex);
             if(!collisionOn){
                 switch (direction){
                     case "up":
@@ -117,6 +118,17 @@ public class Player extends Entity{
 
     }
 
+    public void interactNPC(int index){
+        if(index != 999){
+                panel.gameState = panel.dialogState;
+                panel.npc[index].speak();
+                panel.npcIndex = index;
+
+        } else{
+            panel.gameState = panel.playState;
+        }
+    }
+
     public void pickUpObject(int i){
         if(i != 999){
             SuperObject so = panel.object[i];
@@ -127,6 +139,7 @@ public class Player extends Entity{
                 }
                 so.visible = false;
                 openedDoors.add(so);
+                panel.ui.showMessage("Opened Door");
             }
         }
     }
@@ -173,4 +186,6 @@ public class Player extends Entity{
         g2.drawImage(image, screenX, screenY, panel.tileSize, panel.tileSize, null);
 
     }
+
+
 }

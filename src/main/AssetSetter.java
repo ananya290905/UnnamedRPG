@@ -1,5 +1,6 @@
 package main;
 
+import entity.NPC_MrG;
 import object.ObjectDoorL;
 import object.ObjectDoorR;
 
@@ -20,5 +21,11 @@ public class AssetSetter {
         panel.object[1].worldX = panel.tileSize * 17;
         panel.object[1].worldY = panel.tileSize * 18;
 
+    }
+
+    public void setNPC(){
+        panel.npc[0] = new NPC_MrG(panel);
+        panel.npc[0].worldX = panel.tileSize * 20;
+        panel.npc[0].worldY = panel.tileSize * 15;
     }
 }
